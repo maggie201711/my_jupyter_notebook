@@ -1,0 +1,185 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 遍历指定目录\n",
+    "## - 列出目录下所有文件名称和大小\n",
+    "###   功能分析\n",
+    "    ####    -- list_file()      - Use OS listdir\n",
+    "    ####    -- list_size()      - Use OS getsize() in B unit\n",
+    "    ####    -- max_min()       - Use OS max(), min()\n",
+    "\n",
+    "###    -- 数据结构： \n",
+    "    ####    -- 文件名， 文件大小  - Use 字典"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "files={}\n",
+    "root_dir = r\"D:\\MAGGIE\\PrepareList\"\n",
+    "# Define list_file() 递归\n",
+    "def list_file(root_dir):\n",
+    "    if os.path.isfile(root_dir): # isfile需要完整路径\n",
+    "        size = file_size(root_dir, KB=True)\n",
+    "        files[root_dir] = size\n",
+    "    else:\n",
+    "        for f in os.listdir(root_dir):\n",
+    "            file_path = os.path.join(root_dir, f)\n",
+    "            if os.path.isfile(file_path):\n",
+    "                size = file_size(file_path, KB=True)\n",
+    "                files[file_path] = size\n",
+    "            else:\n",
+    "                list_file(file_path)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Define file_size()\n",
+    "def file_size(file_path, KB=False, MB=False):\n",
+    "    size = os.path.getsize(file_path)\n",
+    "    if KB:\n",
+    "        return round(size/1024, 2) # 保留小数点后两位\n",
+    "    if MB:\n",
+    "        return round(size/(1024*1024), 2)  # 保留小数点后两位\n",
+    "    else:\n",
+    "        return size"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# DDefine max_min()\n",
+    "def max_min():\n",
+    "    max_file = max(files, key=lambda x:files[x])  # 按照字典的值去找最大，而非按照字典的键去找最大\n",
+    "    min_file = min(files, key=lambda x:files[x])  # 按照字典的值去找最小，而非按照字典的键去找最小\n",
+    "    return max_file, min_file"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "### Notes：\n",
+    "###   - 匿名函数 by using lambda\n",
+    "###   - 需要一个函数，但是又不想费神去命名一个函数的场合下使用\n",
+    "###   - Demo：\n",
+    "###         add = lambda x, y : x+y\n",
+    "###         add(1,2)  # 结果为3"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "D:\\MAGGIE\\PrepareList\\junk\\入院待产物品准备清单.xlsx 18.84 KB\n",
+      "D:\\MAGGIE\\PrepareList\\junk\\生娃准备_MaggieVersion1.png 304.32 KB\n",
+      "D:\\MAGGIE\\PrepareList\\junk\\生娃准备_MaggieVersion2.png 248.17 KB\n",
+      "D:\\MAGGIE\\PrepareList\\产后\\第一节产褥期生理变化.docx 16.08 KB\n",
+      "D:\\MAGGIE\\PrepareList\\产后\\第三节会阴部护理.docx 13.22 KB\n",
+      "D:\\MAGGIE\\PrepareList\\产后\\第二节有关产后排尿.docx 12.85 KB\n",
+      "D:\\MAGGIE\\PrepareList\\产后\\第四节  产褥期饮食休息睡眠活动.docx 22.11 KB\n",
+      "D:\\MAGGIE\\PrepareList\\微信图片_20190817211729.jpg 74.53 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生产\\496334b8231b3675bda3ba877ce08449.mp4 9071.46 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生产\\628a226f0c184bd9104c3fe89d3492fb.mp4 17361.05 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生产\\71acb8f83a0f7552eb767afaa17676d2.mp4 7738.75 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生产\\fd443a0e461e70e834b97dc1352b99ab.mp4 2488.19 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生产\\产1mp4.mp4 15396.78 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生产\\蕾蕾自然分娩指导1.mp3 70376.53 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生产\\蕾蕾自然分娩指导2.mp3 81985.71 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生娃准备_MaggieVersion.pdf 311.67 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生娃准备_MaggieVersion.png 305.74 KB\n",
+      "D:\\MAGGIE\\PrepareList\\生娃准备_MaggieVersion.xlsx 291.66 KB\n",
+      "最大文件： D:\\MAGGIE\\PrepareList\\生产\\蕾蕾自然分娩指导2.mp3 文件大小： 81985.71 KB\n",
+      "最小文件： D:\\MAGGIE\\PrepareList\\产后\\第二节有关产后排尿.docx 文件大小： 12.85 KB\n"
+     ]
+    }
+   ],
+   "source": [
+    "# 调用\n",
+    "list_file(root_dir)\n",
+    "for key in files:\n",
+    "    print(key, files[key], \"KB\")\n",
+    "    \n",
+    "max_file, min_file = max_min()\n",
+    "print(\"最大文件：\", max_file, \"文件大小：\", files[max_file], \"KB\")\n",
+    "print(\"最小文件：\", min_file, \"文件大小：\",files[min_file], \"KB\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 函数\n",
+    "###  - 遇到def 加载到内存不执行，遇到调用函数时候才会执行，所以def函数顺序没有先后"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "D:\\MAGGIE\\PrepareList\\生娃准备_MaggieVersion.xlsx\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(max(files))  # max对字典的key排序，字符串大小"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "## 可以用walk方法，本身已经就是递归。返回值是三元组"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
